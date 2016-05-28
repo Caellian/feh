@@ -28,6 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "winwidget.h"
 #include "filelist.h"
 #include "options.h"
+#include "constants.h"
 
 void init_collage_mode(void)
 {

@@ -1,0 +1,13 @@
+{
+  "def_delay": 5.0,
+  "file_delay": [
+    {
+      "name": "2.png",
+      "delay": 2
+    },
+    {
+      "name": "T.png",
+      "delay": 3.0
+    }
+  ]
+}

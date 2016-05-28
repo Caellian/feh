@@ -30,6 +30,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "winwidget.h"
 #include "options.h"
 #include "signals.h"
+#include "constants.h"
 
 void init_slideshow_mode(void)
 {
@@ -320,6 +321,44 @@ void slideshow_change_image(winwidget winwid, int change, int render)
 			current_file = feh_list_jump(filelist, current_file, BACK, jmp);
 			/* important. if the load fails, we only want to step back ONCE to
 			   try the previous file, not another jmp */
+			change = SLIDE_NEXT;
+			break;
+		case SLIDE_JUMP_NEXT_DIR:
+			{
+				char old_dir[PATH_MAX], new_dir[PATH_MAX];
+				int j;
+
+				feh_file_dirname(old_dir, FEH_FILE(current_file->data), PATH_MAX);
+
+				for (j = 0; j < our_filelist_len; j++) {
+					current_file = feh_list_jump(filelist, current_file, FORWARD, 1);
+					feh_file_dirname(new_dir, FEH_FILE(current_file->data), PATH_MAX);
+					if (strcmp(old_dir, new_dir) != 0)
+						break;
+				}
+			}
+			change = SLIDE_NEXT;
+			break;
+		case SLIDE_JUMP_PREV_DIR:
+			{
+				char old_dir[PATH_MAX], new_dir[PATH_MAX];
+				int j;
+
+				/* Start the search from the previous file in case we are on
+				   the first file of a directory */
+				current_file = feh_list_jump(filelist, current_file, BACK, 1);
+				feh_file_dirname(old_dir, FEH_FILE(current_file->data), PATH_MAX);
+
+				for (j = 0; j < our_filelist_len; j++) {
+					current_file = feh_list_jump(filelist, current_file, BACK, 1);
+					feh_file_dirname(new_dir, FEH_FILE(current_file->data), PATH_MAX);
+					if (strcmp(old_dir, new_dir) != 0)
+						break;
+				}
+
+				/* Next file is the first entry of prev_dir */
+				current_file = feh_list_jump(filelist, current_file, FORWARD, 1);
+			}
 			change = SLIDE_NEXT;
 			break;
 		default:

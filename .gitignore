@@ -1,8 +1,31 @@
-/share/applications/*.desktop
-/src/deps.mk
-/src/*.o
-/src/*.inc
+### Project files
+## Applications
+/share/applications/!CMakeLists.txt
+/share/applications/!*.pre
+/share/applications/*.*
+
+## Compiled program
 /src/feh
-/man/*.1
+
+## etc.
 *~
-core
+
+## Man pages
+/man/*.*
+!/man/*.pre
+!/man/CMakeLists.txt
+
+## Workspace
+.idea
+
+## CMake
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+_CPack_Packages
+Makefile
+cmake_install.cmake
+install_manifest.txt
+CTestTestfile.cmake
+CPackConfig.cmake
+CPackSourceConfig.cmake

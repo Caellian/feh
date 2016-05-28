@@ -1,8 +1,8 @@
-@PROJECT_NAME@ version @VERSION_STRING@
+feh version 2.16.0-dev
 
-Usage : @PROJECT_NAME@ [options] <files or directories ...>
+Usage : feh [options] <files or directories ...>
 
- This is just a short option summary.  Please see \"man @PROJECT_NAME@\" for details.
+ This is just a short option summary.  Please see \"man feh\" for details.
 
 OPTIONS
  -h, --help                Show help and exit

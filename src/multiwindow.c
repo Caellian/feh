@@ -29,6 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "filelist.h"
 #include "options.h"
 #include "signals.h"
+#include "constants.h"
 
 void init_multiwindow_mode(void)
 {

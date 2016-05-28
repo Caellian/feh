@@ -28,6 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "filelist.h"
 #include "winwidget.h"
 #include "options.h"
+#include "constants.h"
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -102,7 +103,7 @@ void init_imlib_fonts(void)
 {
 	/* Set up the font stuff */
 	imlib_add_path_to_font_path(".");
-	imlib_add_path_to_font_path(PREFIX "/share/feh/fonts");
+	imlib_add_path_to_font_path(FONTS_DIR);
 
 	return;
 }
@@ -312,7 +313,13 @@ static char *feh_magick_load_image(char *filename)
 
 	snprintf(argv_fd, sizeof(argv_fd), "png:fd:%d", fd);
 
-	if ((childpid = fork()) == 0) {
+	if ((childpid = fork()) < 0) {
+		weprintf("%s: Can't load with imagemagick. Fork failed:", filename);
+		unlink(sfn);
+		free(sfn);
+		sfn = NULL;
+	}
+	else if (childpid == 0) {
 
 		/* discard convert output */
 		devnull = open("/dev/null", O_WRONLY);
@@ -326,7 +333,7 @@ static char *feh_magick_load_image(char *filename)
 		setpgid(0, 0);
 
 		execlp("convert", "convert", filename, argv_fd, NULL);
-		exit(1);
+		_exit(1);
 	}
 	else {
 		alarm(opt.magick_timeout);
@@ -1015,28 +1022,29 @@ void feh_display_status(char stat)
 
 void feh_edit_inplace(winwidget w, int op)
 {
-	int ret;
-	Imlib_Image old;
-	Imlib_Load_Error err;
+	int tmp;
+	Imlib_Image old = NULL;
+	Imlib_Load_Error err = IMLIB_LOAD_ERROR_NONE;
 	if (!w->file || !w->file->data || !FEH_FILE(w->file->data)->filename)
 		return;
 
-	if (!strcmp(gib_imlib_image_format(w->im), "jpeg")) {
+	if (!strcmp(gib_imlib_image_format(w->im), "jpeg") &&
+			!path_is_url(FEH_FILE(w->file->data)->filename)) {
 		feh_edit_inplace_lossless(w, op);
 		feh_reload_image(w, 1, 1);
 		return;
 	}
 
-	ret = feh_load_image(&old, FEH_FILE(w->file->data));
-	if (ret) {
-		if (op == INPLACE_EDIT_FLIP) {
-			imlib_context_set_image(old);
+	old = imlib_load_image_with_error_return(FEH_FILE(w->file->data)->filename, &err);
+
+	if ((old != NULL) && (err == IMLIB_LOAD_ERROR_NONE)) {
+		imlib_context_set_image(old);
+		if (op == INPLACE_EDIT_FLIP)
 			imlib_image_flip_vertical();
-		} else if (op == INPLACE_EDIT_MIRROR) {
-			imlib_context_set_image(old);
+		else if (op == INPLACE_EDIT_MIRROR)
 			imlib_image_flip_horizontal();
-		} else
-			gib_imlib_image_orientate(old, op);
+		else
+			imlib_image_orientate(op);
 		gib_imlib_save_image_with_error_return(old,
 			FEH_FILE(w->file->data)->filename, &err);
 		gib_imlib_free_image(old);
@@ -1045,7 +1053,23 @@ void feh_edit_inplace(winwidget w, int op)
 				w, err);
 		feh_reload_image(w, 1, 1);
 	} else {
-		im_weprintf(w, "failed to load image from disk to edit it in place");
+		/*
+		 * Image was opened using curl/magick or has been deleted after
+		 * opening it
+		 */
+		imlib_context_set_image(w->im);
+		if (op == INPLACE_EDIT_FLIP)
+			imlib_image_flip_vertical();
+		else if (op == INPLACE_EDIT_MIRROR)
+			imlib_image_flip_horizontal();
+		else {
+			imlib_image_orientate(op);
+			tmp = w->im_w;
+			FEH_FILE(w->file->data)->info->width = w->im_w = w->im_h;
+			FEH_FILE(w->file->data)->info->height = w->im_h = tmp;
+		}
+		im_weprintf(w, "unable to edit in place. Changes have not been saved.");
+		winwidget_render_image(w, 1, 0);
 	}
 
 	return;
@@ -1173,15 +1197,16 @@ void feh_edit_inplace_lossless(winwidget w, int op)
 
 	if ((pid = fork()) < 0) {
 		im_weprintf(w, "lossless %s: fork failed:", op_name);
-		exit(1);
+		free(file_str);
+		return;
 	}
 	else if (pid == 0) {
 
 		execlp("jpegtran", "jpegtran", "-copy", "all", op_op, op_value,
 				"-outfile", file_str, file_str, NULL);
 
-		im_weprintf(w, "lossless %s: Is 'jpegtran' installed? Failed to exec:", op_name);
-		exit(1);
+		weprintf("lossless %s: Is 'jpegtran' installed? Failed to exec:", op_name);
+		_exit(1);
 	}
 	else {
 		waitpid(pid, &status, 0);
@@ -1197,8 +1222,7 @@ void feh_edit_inplace_lossless(winwidget w, int op)
 		}
 	}
 	if ((pid = fork()) < 0) {
-		im_weprintf(w, "lossless %s: cannot fix rotation: fork:", op_name);
-		exit(1);
+		im_weprintf(w, "lossless %s: fork failed while updating EXIF tags:", op_name);
 	}
 	else if (pid == 0) {
 
@@ -1207,8 +1231,8 @@ void feh_edit_inplace_lossless(winwidget w, int op)
 		dup2(devnull, 1);
 
 		execlp("jpegexiforient", "jpegexiforient", "-1", file_str, NULL);
-		im_weprintf(w, "lossless %s: Failed to exec jpegexiforient:", op_name);
-		exit(1);
+		weprintf("lossless %s: Failed to exec jpegexiforient:", op_name);
+		_exit(1);
 	}
 	else {
 		waitpid(pid, &status, 0);

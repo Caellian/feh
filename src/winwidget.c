@@ -29,6 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "winwidget.h"
 #include "options.h"
 #include "events.h"
+#include "constants.h"
 
 static void winwidget_unregister(winwidget win);
 static void winwidget_register(winwidget win);

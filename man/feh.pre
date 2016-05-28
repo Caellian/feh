@@ -1,11 +1,11 @@
-.Dd $DATE$
+.Dd @MAN_DATE@
 .Dt FEH 1
 .Os
 .
 .
 .Sh NAME
 .
-.Nm feh
+.Nm @PROJECT_NAME@
 .Nd image viewer and cataloguer
 .
 .
@@ -20,12 +20,13 @@
 .
 This manual documents
 .Nm
-$VERSION$
+@VERSION_STRING@
 .
 .Pp
 .
-Compile-time switches: libcurl support $MAN_CURL$, Xinerama support
-$MAN_XINERAMA$, builtin EXIF support $MAN_EXIF$$MAN_DEBUG$
+Compile-time switches: libcurl support @MAN_CURL@, Xinerama support
+@MAN_XINERAMA@, builtin EXIF support @MAN_EXIF@, configuration file support
+@MAN_JSONC@@MAN_DEBUG@
 .
 .
 .Sh DESCRIPTION
@@ -1040,9 +1041,9 @@ for key bindings and
 .Pa buttons
 for mouse button bindings.
 It will try to read them from
-.Pa $XDG_CONFIG_HOME/feh/ ,
+.Pa @XDG_CONFIG_HOME@/feh/ ,
 which
-.Pq when XDG_CONFIG_HOME is unset
+.Pq when @XDG_CONFIG_HOME@ is unset
 defaults to
 .Pa ~/.config/feh/ .
 If the files are not found in that directory, it will also try
@@ -1780,6 +1781,7 @@ Make zoom options more intuitive
 Copyright (C) 1999, 2000 by Paul Duncan.
 Copyright (C) 1999, 2000 by Tom Gilbert (and various contributors).
 Copyright (C) 2010-2016 by Daniel Friesel (and even more contributors).
+Copyright (C) 2016 by Tin Svagelj (and unlikely more contributors)
 .
 .Pp
 .
@@ -1808,8 +1810,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 .
 .Pp
 .
-Current developer: Daniel Friesel
-.Aq derf@finalrewind.org
+Current developer: Tin Svagelj
+.Aq tin.svagelj.email@gmail.com
 .
 .Pp
 .

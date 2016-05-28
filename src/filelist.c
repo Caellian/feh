@@ -36,7 +36,6 @@ gib_list *filelist = NULL;
 gib_list *original_file_items = NULL; /* original file items from argv */
 int filelist_len = 0;
 gib_list *current_file = NULL;
-extern int errno;
 
 static gib_list *rm_filelist = NULL;
 
@@ -383,6 +382,20 @@ int feh_file_info_load(feh_file * file, Imlib_Image im)
 	return(0);
 }
 
+void feh_file_dirname(char *dst, feh_file * f, int maxlen)
+{
+	int n = strlen(f->filename) - strlen(f->name);
+
+	/* Give up on long dirnames */
+	if (n <= 0 || n >= maxlen) {
+		dst[0] = '\0';
+		return;
+	}
+
+	strncpy(dst, f->filename, n);
+	dst[n] = '\0';
+}
+
 int feh_cmp_filename(void *file1, void *file2)
 {
 	return(strcmp(FEH_FILE(file1)->filename, FEH_FILE(file2)->filename));
@@ -391,6 +404,17 @@ int feh_cmp_filename(void *file1, void *file2)
 int feh_cmp_name(void *file1, void *file2)
 {
 	return(strcmp(FEH_FILE(file1)->name, FEH_FILE(file2)->name));
+}
+
+int feh_cmp_dirname(void *file1, void *file2)
+{
+	char dir1[PATH_MAX], dir2[PATH_MAX];
+	int cmp;
+	feh_file_dirname(dir1, FEH_FILE(file1), PATH_MAX);
+	feh_file_dirname(dir2, FEH_FILE(file2), PATH_MAX);
+	if ((cmp = strcmp(dir1, dir2)) != 0)
+		return(cmp);
+	return(feh_cmp_name(file1, file2));
 }
 
 /* Return -1 if file1 is _newer_ than file2 */
@@ -464,6 +488,9 @@ void feh_prepare_filelist(void)
 		break;
 	case SORT_FILENAME:
 		filelist = gib_list_sort(filelist, feh_cmp_filename);
+		break;
+	case SORT_DIRNAME:
+		filelist = gib_list_sort(filelist, feh_cmp_dirname);
 		break;
 	case SORT_MTIME:
 		filelist = gib_list_sort(filelist, feh_cmp_mtime);
@@ -595,7 +622,8 @@ char *feh_absolute_path(char *path)
 	/* I SHOULD be able to just use a simple realpath() here, but dumb * 
 	   old Solaris's realpath doesn't return an absolute path if the
 	   path you give it is relative. Linux and BSD get this right... */
-	getcwd(cwd, sizeof(cwd));
+	if (getcwd(cwd, sizeof(cwd)) == NULL)
+		eprintf("Cannot determine working directory:");
 	snprintf(temp, sizeof(temp), "%s/%s", cwd, path);
 	if (realpath(temp, fullpath) != NULL) {
 		ret = estrdup(fullpath);

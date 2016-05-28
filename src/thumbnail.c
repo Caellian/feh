@@ -33,6 +33,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "feh_png.h"
 #include "index.h"
 #include "signals.h"
+#include "constants.h"
 
 static gib_list *thumbnails = NULL;
 

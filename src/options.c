@@ -27,6 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "feh.h"
 #include "filelist.h"
 #include "options.h"
+#include "constants.h"
 
 static void check_options(void);
 static void feh_getopt_theme(int argc, char **argv);
@@ -60,7 +61,7 @@ void init_parse_options(int argc, char **argv)
 	opt.scroll_step = 20;
 	opt.menu_font = estrdup(DEFAULT_MENU_FONT);
 	opt.font = NULL;
-	opt.menu_bg = estrdup(PREFIX "/share/feh/images/menubg_default.png");
+	opt.menu_bg = estrdup(ROOT_DIR "/share/feh/images/menubg_default.png");
 	opt.max_height = opt.max_width = UINT_MAX;
 
 	opt.start_list_at = NULL;
@@ -514,6 +515,8 @@ static void feh_parse_option_array(int argc, char **argv, int finalrun)
 				opt.sort = SORT_NAME;
 			else if (!strcasecmp(optarg, "filename"))
 				opt.sort = SORT_FILENAME;
+			else if (!strcasecmp(optarg, "dirname"))
+				opt.sort = SORT_DIRNAME;
 			else if (!strcasecmp(optarg, "mtime"))
 				opt.sort = SORT_MTIME;
 			else if (!strcasecmp(optarg, "width"))

@@ -28,6 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "filelist.h"
 #include "options.h"
 #include "wallpaper.h"
+#include "constants.h"
 #include <limits.h>
 #include <sys/stat.h>
 Window ipc_win = None;

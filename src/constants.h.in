@@ -1,0 +1,13 @@
+//
+// Created by caellian on 31/07/16.
+//
+
+#ifndef FEH_CONFIG_H
+#define FEH_CONFIG_H
+
+#define ROOT_DIR "@CMAKE_INSTALL_PREFIX@"
+#define FONTS_DIR "@FONTDIR@"
+#define PACKAGE "@PROJECT_NAME@"
+#define VERSION "@VERSION_STRING@"
+
+#endif //FEH_CONFIG_H
