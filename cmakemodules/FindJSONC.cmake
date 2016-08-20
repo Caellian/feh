@@ -50,8 +50,6 @@ else (JSONC_LIBRARIES AND JSONC_INCLUDE_DIRS)
             /sw/include/json-c
             )
 
-    # debian uses version suffixes
-    # add suffix evey new release
     find_library(JSONC_LIBRARIES
             NAMES
             libjson-c.so

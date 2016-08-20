@@ -427,7 +427,7 @@ void feh_event_handle_keypress(XEvent * ev)
 		case XK_Return:
 			if (state & ControlMask) {
 				/* insert actual newline */
-				ESTRAPPEND(FEH_FILE(winwid->file->data)->caption, "\n");
+				str_append(FEH_FILE(winwid->file->data)->caption, "\n");
 				winwidget_render_image_cached(winwid);
 			} else {
 				/* finish caption entry, write to captions file */
@@ -460,13 +460,13 @@ void feh_event_handle_keypress(XEvent * ev)
 			break;
 		case XK_BackSpace:
 			/* backspace */
-			ESTRTRUNC(FEH_FILE(winwid->file->data)->caption, 1);
+			str_trunc(FEH_FILE(winwid->file->data)->caption, 1);
 			winwidget_render_image_cached(winwid);
 			break;
 		default:
 			if (isascii(keysym)) {
 				/* append to caption */
-				ESTRAPPEND_CHAR(FEH_FILE(winwid->file->data)->caption, keysym);
+				str_append_char(FEH_FILE(winwid->file->data)->caption, keysym);
 				winwidget_render_image_cached(winwid);
 			}
 			break;

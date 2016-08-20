@@ -200,3 +200,9 @@ char *ereadfile(char *path)
 
 	return estrdup(buffer);
 }
+
+char *itoa(int i){
+	char *str = malloc((size_t) log10(i) * sizeof(char) + 1);
+	sprintf(str, "%d\0", i);
+	return str;
+}

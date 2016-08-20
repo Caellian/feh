@@ -47,7 +47,9 @@ char path_is_url(char *path);
 char *feh_unique_filename(char *path, char *basename);
 char *ereadfile(char *path);
 
-#define ESTRAPPEND(a,b) \
+char *itoa(int i);
+
+#define str_append(a,b) \
   {\
     char *____newstr;\
     if (!(a)) {\
@@ -61,7 +63,7 @@ char *ereadfile(char *path);
     }\
   }
 
-#define ESTRAPPEND_CHAR(a,b) \
+#define str_append_char(a,b) \
   {\
     char *____newstr;\
     int ____len;\
@@ -80,7 +82,21 @@ char *ereadfile(char *path);
     }\
   }
 
-#define ESTRTRUNC(string,chars) \
+#define str_prepend(a, b)\
+  {\
+    char *____newstr;\
+    if (!(a)) {\
+      a = estrdup(b);\
+    } else {\
+      ____newstr = emalloc(strlen(b) + strlen(a) + 1);\
+      strcpy(____newstr, (b));\
+      strcat(____newstr, (a));\
+      free(a);\
+      (a) = ____newstr;\
+    }\
+  }
+
+#define str_trunc(string,chars) \
   {\
     int ____len;\
     if (string) {\

@@ -26,7 +26,7 @@ This manual documents
 .
 Compile-time switches: libcurl support @MAN_CURL@, Xinerama support
 @MAN_XINERAMA@, builtin EXIF support @MAN_EXIF@, configuration file support
-@MAN_JSONC@@MAN_DEBUG@
+@MAN_JANSSON@@MAN_DEBUG@
 .
 .
 .Sh DESCRIPTION
