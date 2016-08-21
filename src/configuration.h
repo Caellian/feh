@@ -4,16 +4,16 @@
 #include <stdio.h>
 #include <jansson.h>
 
-void* get(char* option);
+void* get_option(char* option);
 
-size_t getArraySize(char *option);
+size_t get_option_array_size(char *option);
 
-unsigned char parseConfigFile(FILE configFile);
+unsigned char parse_config_file(FILE* configFile);
 
-void parseObject(json_t *object, const char* base);
+void parse_object(json_t *object, char *base);
 
-void parseArray(json_t *array, const char* base);
+void parse_array(json_t *array, char *base);
 
-float getFileDelay(char* fileName);
+float get_file_delay(char *file_path);
 
 #endif //FEH_CONFIGURATION_H

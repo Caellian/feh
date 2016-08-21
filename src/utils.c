@@ -144,6 +144,77 @@ char *estrjoin(const char *separator, ...)
 	return string;
 }
 
+char *substr(const char* string, size_t start, size_t end) {
+	char* new = malloc(sizeof(char) * (end - start + 1));
+	for (size_t n = start, i = 0; n <= end; ++n, i++) {
+        if (n < end) {
+            new[i] = string[n];
+        } else {
+            new[i] = '\0';
+        }
+	}
+	return new;
+}
+
+int last_index_of(const char* string, char searched) {
+	int n;
+	for (n = (int) (strlen(string) - 1); n >= 0 && string[n] != searched; n--);
+	return n;
+}
+
+char *rel_path(char* start, char* end) {
+	size_t start_size = strlen(start);
+	size_t end_size = strlen(end);
+
+	size_t lowest = start_size > end_size ? end_size : start_size;
+
+	char* common = malloc(sizeof(char) * (lowest + 1));
+	for (size_t i = 0; i <= lowest; ++i) {
+		if (i == lowest) {
+			common[i] = '\0';
+			break;
+		} else if(start[i] == end[i]) {
+			common[i] = start[i];
+		} else {
+			common[i] = '\0';
+			break;
+		}
+	}
+	size_t common_size = strlen(common);
+	if (common_size == 0) return NULL;
+    if (common_size == start_size && common_size == end_size) return ".\0";
+
+	size_t excape_count = 0;
+	for (size_t n = common_size; n < start_size; ++n) {
+		if (start[n] == '/'){
+			excape_count++;
+		}
+	}
+
+    char* result;
+    if (excape_count > 0) {
+        result = malloc(sizeof(char) * (3 * excape_count));
+        for (int n = 0; n < excape_count * 3; n += 3) {
+            result[n] = '.';
+            result[n+1] = '.';
+            result[n+2] = '/';
+            result[n+3] = '\0';
+        }
+        if (end_size == common_size) {
+            char* endDir = substr(end, last_index_of(end, '/') + 1, strlen(end));
+            str_append(result, endDir);
+        } else {
+            str_append(result, substr(end, common_size, end_size));
+        }
+
+    } else {
+        result = substr(end, common_size, end_size);
+    }
+
+	return result;
+
+}
+
 char path_is_url(char *path) {
 	if ((!strncmp(path, "http://", 7))
 			|| (!strncmp(path, "https://", 8))
@@ -202,7 +273,7 @@ char *ereadfile(char *path)
 }
 
 char *itoa(int i){
-	char *str = malloc((size_t) log10(i) * sizeof(char) + 1);
+	char *str = malloc(((size_t) log10(INT_MAX) + 1) * sizeof(char));
 	sprintf(str, "%d\0", i);
 	return str;
 }

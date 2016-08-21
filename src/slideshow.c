@@ -31,6 +31,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "options.h"
 #include "signals.h"
 #include "constants.h"
+#include "configuration.h"
+
+double default_delay;
 
 void init_slideshow_mode(void)
 {
@@ -51,21 +54,40 @@ void init_slideshow_mode(void)
 		eprintf("--start-at %s: File not found in filelist",
 				opt.start_list_at);
 
+    default_delay = opt.slideshow_delay > 0.0 ? opt.slideshow_delay : 0.0;
+
+    if (opt.use_config) {
+        if (get_option("def_delay") != NULL) {
+            default_delay = *((double*) get_option("def_delay"));
+        }
+    }
+
+
 	mode = "slideshow";
 	for (; l; l = l->next) {
+
 		file = FEH_FILE(l->data);
 		if (last) {
 			filelist = feh_file_remove_from_list(filelist, last);
 			last = NULL;
 		}
 		current_file = l;
+
+        double delay = default_delay;
+
+		if (opt.use_config) {
+            if (get_file_delay(file->filename) > 0.0) {
+                delay = get_file_delay(file->filename);
+            }
+        }
+
 		s = slideshow_create_name(file, NULL);
 		if ((w = winwidget_create_from_file(l, s, WIN_TYPE_SLIDESHOW)) != NULL) {
 			free(s);
 			success = 1;
 			winwidget_show(w);
-			if (opt.slideshow_delay > 0.0)
-				feh_add_timer(cb_slide_timer, w, opt.slideshow_delay, "SLIDE_CHANGE");
+			if (delay > 0.0)
+				feh_add_timer(cb_slide_timer, w, delay, "SLIDE_CHANGE");
 			if (opt.reload > 0)
 				feh_add_unique_timer(cb_reload_timer, w, opt.reload);
 			break;
@@ -418,8 +440,17 @@ void slideshow_change_image(winwidget winwid, int change, int render)
 	if (filelist_len == 0)
 		eprintf("No more slides in show");
 
-	if (opt.slideshow_delay > 0.0)
-		feh_add_timer(cb_slide_timer, winwid, opt.slideshow_delay, "SLIDE_CHANGE");
+    feh_file* file = FEH_FILE(current_file->data);
+    double delay = default_delay;
+
+    if (opt.use_config) {
+        if (get_file_delay(file->filename) > 0.0) {
+            delay = get_file_delay(file->filename);
+        }
+    }
+
+	if (delay > 0.0)
+		feh_add_timer(cb_slide_timer, winwid, delay, "SLIDE_CHANGE");
 	return;
 }
 

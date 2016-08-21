@@ -93,8 +93,8 @@ OPTIONS
      --min-dimension WxH   Only show images with width >= W and height >= H
      --max-dimension WxH   Only show images with width <= W and height <= H
      --scroll-step COUNT   Scroll COUNT pixels when movement key is pressed
-     --config-file         Load delay options from configuration files located
-                           in image directories and other configuration options
+     --use-config FILE     Load detail configuration file used for functions
+                           like custom slideshow delay
 
 MONTAGE MODE OPTIONS
  -X, --ignore-aspect       Set thumbnail to specified width/height without

@@ -43,6 +43,9 @@ char *_estrdup(char *s);
 void *_emalloc(size_t n);
 void *_erealloc(void *ptr, size_t n);
 char *estrjoin(const char *separator, ...);
+char *substr(const char* string, size_t start, size_t end);
+int last_index_of(const char* string, char searched);
+char *rel_path(char* start, char* end);
 char path_is_url(char *path);
 char *feh_unique_filename(char *path, char *basename);
 char *ereadfile(char *path);
@@ -85,9 +88,9 @@ char *itoa(int i);
 #define str_prepend(a, b)\
   {\
     char *____newstr;\
-    if (!(a)) {\
+    if (!(a) && (b)) {\
       a = estrdup(b);\
-    } else {\
+    } else if ((b)) {\
       ____newstr = emalloc(strlen(b) + strlen(a) + 1);\
       strcpy(____newstr, (b));\
       strcat(____newstr, (a));\

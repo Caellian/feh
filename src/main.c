@@ -32,6 +32,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "events.h"
 #include "signals.h"
 #include "wallpaper.h"
+#include "configuration.h"
 
 char **cmdargv = NULL;
 int cmdargc = 0;
@@ -43,6 +44,9 @@ int main(int argc, char **argv)
 
 	setup_signal_handlers();
 	init_parse_options(argc, argv);
+	if (opt.use_config) {
+		parse_config_file(fopen(opt.config_file, "r"));
+	}
 
 	init_imlib_fonts();
 

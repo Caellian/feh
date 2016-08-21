@@ -1,14 +1,35 @@
 {
-  "feh_config": true,
-  "def_delay": 5.0,
-  "file_delay": [
-    {
-      "name": "2.png",
-      "delay": 2
+  "default_delay": 7.0,
+  "custom_delay": {
+    "relative": {
+      "1.png": {
+        "delay": 1.0
+      },
+      "T.png": {
+        "delay": 3.0
+      },
+      "other": {
+        "delay": 17.0
+      }
     },
-    {
-      "name": "T.png",
-      "delay": 3.0
+    "absolute": {
+      "/run/media/caellian/Development/Projects/feh/test/conf_test/other/2.png": {
+        "delay": 2.0
+      }
+    },
+    "named": {
+      "X.png": {
+        "delay": 20.0
+      }
     }
+  },
+  "arraytest": [
+    "This",
+    "is",
+    "a",
+    "test",
+    "for",
+    "configuration",
+    "loader."
   ]
 }

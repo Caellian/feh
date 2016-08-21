@@ -44,7 +44,7 @@ function _feh {
 	'(--borderless -x)'{-x,--borderless}'[areate borderless windows]' \
 	'(--cache-thumbnails -P)'{--cache-thumbnails,-P}'[cache thumbnails]' \
 	'(--caption-path -K)'{--caption-path,-K+}'[enable caption mode]:caption directory:_files -/' \
-	'(--config-file)'{--config-file}'[load properties from config file]' \
+	'(--use-config)'{--use-config}'[load properties from config file]' \
 	'(--customlist -L)'{--customlist,-L}'[custom list mode]:feh format string' \
 	'--cycle-once[quit after one loop through slideshow]' \
 	'(--draw-actions -G)'{--draw-actions,-G}'[show defined actions]' \
