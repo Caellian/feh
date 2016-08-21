@@ -8,7 +8,7 @@
 
 gib_hash *config = NULL;
 
-void *get_option(char *option) {
+void *get_config(char *option) {
     if (config != NULL) {
         return gib_hash_get(config, option);
     } else {
@@ -16,12 +16,12 @@ void *get_option(char *option) {
     }
 }
 
-size_t get_option_array_size(char *option) {
+size_t get_config_array_size(char *option) {
     char* arrayCheck = estrjoin("", option, ".arraySize");
-    if (get_option(arrayCheck) == NULL) {
+    if (get_config(arrayCheck) == NULL) {
         return 0;
     } else {
-        return *((size_t *) get_option(arrayCheck));
+        return *((size_t *) get_config(arrayCheck));
     }
 }
 
@@ -142,7 +142,7 @@ float get_file_delay(char *file_path) {
     if (relative_path != NULL) {
         char* rel_opt = malloc(sizeof(char) * (strlen("custom_delay.relative..delay") + strlen(relative_path) + 1));
         sprintf(rel_opt, "custom_delay.relative.%s.delay", relative_path);
-        check = get_option(rel_opt);
+        check = get_config(rel_opt);
         if (check != NULL) {
             delay = (float) *((double*) check);
         }
@@ -150,7 +150,7 @@ float get_file_delay(char *file_path) {
     if (check == NULL) {
         char* absolute = malloc(sizeof(char) * (strlen("custom_delay.absolute..delay") + strlen(file_path) + 1));
         sprintf(absolute, "custom_delay.absolute.%s.delay", file_path);
-        check = get_option(absolute);
+        check = get_config(absolute);
         if (check != NULL) {
             delay = (float) *((double*) check);
         }
@@ -158,7 +158,7 @@ float get_file_delay(char *file_path) {
     if (check == NULL) {
         char* named = malloc(sizeof(char) * (strlen("custom_delay.named..delay") + strlen(file_name) + 1));
         sprintf(named, "custom_delay.named.%s.delay", file_name);
-        check = get_option(named);
+        check = get_config(named);
         if (check != NULL) {
             delay = (float) *((double*) check);
         }
@@ -168,7 +168,7 @@ float get_file_delay(char *file_path) {
     if (dir_relative_path != NULL && check == NULL) {
         char* rel_opt = malloc(sizeof(char) * (strlen("custom_delay.relative..delay") + strlen(dir_relative_path) + 1));
         sprintf(rel_opt, "custom_delay.relative.%s.delay", dir_relative_path);
-        check = get_option(rel_opt);
+        check = get_config(rel_opt);
         if (check != NULL) {
             delay = (float) *((double*) check);
         }
@@ -176,7 +176,7 @@ float get_file_delay(char *file_path) {
     if (check == NULL) {
         char* absolute = malloc(sizeof(char) * (strlen("custom_delay.absolute..delay") + strlen(file_dir) + 1));
         sprintf(absolute, "custom_delay.absolute.%s.delay", file_dir);
-        check = get_option(absolute);
+        check = get_config(absolute);
         if (check != NULL) {
             delay = (float) *((double*) check);
         }
@@ -184,7 +184,7 @@ float get_file_delay(char *file_path) {
     if (check == NULL) {
         char* named = malloc(sizeof(char) * (strlen("custom_delay.named..delay") + strlen(file_dir_name) + 1));
         sprintf(named, "custom_delay.named.%s.delay", file_dir_name);
-        check = get_option(named);
+        check = get_config(named);
         if (check != NULL) {
             delay = (float) *((double*) check);
         }
@@ -192,7 +192,7 @@ float get_file_delay(char *file_path) {
 
     // Try to use default delay
     if (check == NULL) {
-        check = get_option("default_delay");
+        check = get_config("default_delay");
         if (check != NULL) {
             delay = (float) *((double*) check);
         }

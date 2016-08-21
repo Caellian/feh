@@ -4,9 +4,9 @@
 #include <stdio.h>
 #include <jansson.h>
 
-void* get_option(char* option);
+void* get_config(char *option);
 
-size_t get_option_array_size(char *option);
+size_t get_config_array_size(char *option);
 
 unsigned char parse_config_file(FILE* configFile);
 

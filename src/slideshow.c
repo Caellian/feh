@@ -57,8 +57,8 @@ void init_slideshow_mode(void)
     default_delay = opt.slideshow_delay > 0.0 ? opt.slideshow_delay : 0.0;
 
     if (opt.use_config) {
-        if (get_option("def_delay") != NULL) {
-            default_delay = *((double*) get_option("def_delay"));
+        if (get_config("def_delay") != NULL) {
+            default_delay = *((double*) get_config("def_delay"));
         }
     }
 

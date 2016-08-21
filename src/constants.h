@@ -10,4 +10,12 @@
 #define PACKAGE "feh"
 #define VERSION "2.16.0-dev"
 
+#define CMAKE_TRUE "TRUE"
+#define CMAKE_FALSE "FALSE"
+
+#define CURL_FOUND "TRUE"
+#define XINERAMA_FOUND "TRUE"
+#define EXIF_FOUND "TRUE"
+#define JANSSON_FOUND "TRUE"
+
 #endif //FEH_CONFIG_H

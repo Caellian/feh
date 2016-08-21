@@ -771,8 +771,12 @@ static void feh_parse_option_array(int argc, char **argv, int finalrun) {
                 opt.recursive = 0;
                 break;
             case 242:
-                opt.use_config = 1;
-                opt.config_file = optarg;
+                if (JANSSON_FOUND == CMAKE_TRUE) {
+                    opt.use_config = 1;
+                    opt.config_file = optarg;
+                } else {
+                    weprintf("Can't use JSON configuration without Jansson!");
+                }
             default:
                 break;
         }
