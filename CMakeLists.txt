@@ -2,10 +2,6 @@ cmake_minimum_required(VERSION 3.5)
 project(feh)
 set(PROJECT_NAME_CAPITALIZED "feh")
 
-if (NOT UNIX)
-    message(FATAL_ERROR "Feh is a linux application. CMake will exit.")
-endif ()
-
 # Default CFLAGS
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -O2")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -pedantic")
